@@ -23,7 +23,9 @@
 - **Amélioration (Sprint 2) :** Proposer un script de "sanity check" (ex: `check_env.py`) que l'utilisateur peut lancer avant le test manuel pour s'assurer que toutes les dépendances sont installées et fonctionnelles.
 
 ### 🚀 DEVOPS (L'Opérateur)
-- *À remplir...*
+- **Ce qui a fonctionné :** L'initialisation du dépôt Git en fin de sprint a permis de sécuriser le travail accompli sur l'US-00. La structure de documentation (CHANGELOG, Backlog) est opérationnelle et permet un suivi rigoureux.
+- **Défis :** Le retard dans l'initialisation du dépôt Git a masqué l'historique des premiers développements. La configuration du `.gitignore` a dû être vérifiée a posteriori pour ne pas committer de données sensibles (clés API).
+- **Amélioration (Sprint 2) :** Automatiser la vérification du `requirements.txt` via un hook ou un script de build pour s'assurer que l'environnement de développement reste synchronisé avec la production.
 
 ---
 
@@ -32,18 +34,21 @@
 1. **Qu'est-ce qui a bien fonctionné pendant ce premier sprint de mise en place ?**
    - La clarté des spécifications techniques de l'architecte a permis de coder "en une seule passe" sans zones d'ombre.
    - La structure modulaire proposée permet d'ajouter des pages très facilement.
+   - Le passage de relais entre les rôles (Planification -> Dev -> QA -> DevOps) est fluide.
 
 2. **Quels ont été les principaux défis ou points de blocage rencontrés ?**
    - La persistance des données lors de la navigation entre les pages : résolu via `st.session_state` initialisé dans `app.py` et `01_creer_cv.py`.
    - L'alignement de l'aperçu dynamique à droite avec un formulaire complexe à gauche.
+   - L'installation des dépendances Streamlit qui différait selon l'environnement local.
 
 3. **Comment pouvons-nous améliorer notre collaboration ou notre processus technique pour le Sprint 2 ?**
    - Automatiser un premier test de "build" ou de "lint" pour vérifier que les imports entre modules fonctionnent toujours après une modification.
    - Définir plus précisément le format JSON attendu par l'IA pour l'US-01.
+   - Commencer chaque nouvelle US sur une branche dédiée dès le début de la phase de développement.
 
 ---
 
 ## 📋 Actions d'Amélioration (Pour le Sprint 2)
 
 - [ ] Créer un script `check_env.py` pour valider l'environnement de test (QA)
-- [ ] *Action 2...*
+- [ ] Mettre en place un script ou un hook pour valider la synchronisation de `requirements.txt` (DevOps)
