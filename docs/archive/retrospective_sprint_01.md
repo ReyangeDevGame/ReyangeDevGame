@@ -52,18 +52,3 @@
 
 - [ ] Créer un script `check_env.py` pour valider l'environnement de test (QA)
 - [ ] Mettre en place un script ou un hook pour valider la synchronisation de `requirements.txt` (DevOps)
-
----
-
-## 🏆 Synthèse Globale (Business Analyst)
-
-L'objectif du Sprint 1 (Échafaudage) est **100% atteint**. L'application dispose d'une structure solide, d'une navigation fonctionnelle, d'un formulaire de saisie dynamique et d'un aperçu en temps réel.
-
-### Points Forts
-- **Collaboration Multi-Rôles :** Le passage de relais entre les rôles a été fluide et efficace.
-- **Qualité Technique :** L'utilisation de Streamlit et la séparation des responsabilités assurent une base saine.
-
-### Recommandations pour le Sprint 2
-1. **State Management :** Créer un `state_manager.py` pour centraliser la manipulation de `cv_data`.
-2. **Support QA :** Automatiser la vérification de l'environnement local avec `check_env.py`.
-3. **Flux Git :** Utiliser des branches dédiées dès le début de chaque nouvelle fonctionnalité.
