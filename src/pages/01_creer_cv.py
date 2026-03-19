@@ -10,6 +10,8 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from components.sidebar import render_sidebar
 from components.cv_preview import render_preview
+from services.pdf_service import extract_text_from_pdf
+from services.cv_parser_service import parse_cv_text
 
 # ── Configuration de la page ──
 st.set_page_config(
@@ -37,6 +39,46 @@ render_sidebar()
 # ── Titre de la page ──
 st.markdown("## 📝 Créer mon CV")
 st.caption("Remplissez les sections ci-dessous. L'aperçu se met à jour en temps réel.")
+
+# --- Importation PDF ---
+uploaded_pdf = st.file_uploader("Importer un CV existant (PDF)", type=["pdf"])
+if uploaded_pdf:
+    if st.button("Analyser le CV"):
+        try:
+            with st.spinner("Extraction et analyse du CV en cours..."):
+                text = extract_text_from_pdf(uploaded_pdf)
+                parsed_data = parse_cv_text(text)
+                
+                # Fusion des données simples
+                for key in ["name", "email", "phone", "address", "linkedin"]:
+                    val = parsed_data.get("personal_info", {}).get(key)
+                    if val:
+                        st.session_state["cv_data"]["personal_info"][key] = val
+                        # Force la mise à jour du widget Streamlit existant
+                        st.session_state[f"input_{key}"] = val
+                
+                if parsed_data["experiences"]:
+                    # Nettoyage des anciens widgets dynamiques pour forcer le rafraîchissement
+                    for k in list(st.session_state.keys()):
+                        if k.startswith(("exp_", "del_exp_")):
+                            del st.session_state[k]
+                    st.session_state["cv_data"]["experiences"] = parsed_data["experiences"]
+                    
+                if parsed_data["education"]:
+                    for k in list(st.session_state.keys()):
+                        if k.startswith(("edu_", "del_edu_")):
+                            del st.session_state[k]
+                    st.session_state["cv_data"]["education"] = parsed_data["education"]
+                    
+                if parsed_data["skills"]:
+                    st.session_state["cv_data"]["skills"] = parsed_data["skills"]
+                    st.session_state["input_skills"] = ", ".join(parsed_data["skills"])
+                    
+            st.rerun()
+        except Exception as e:
+            st.error(f"Erreur lors de l'analyse : {e}")
+
+st.divider()
 
 # ── Layout 2 colonnes : Formulaire | Aperçu ──
 col_form, col_preview = st.columns([3, 2], gap="large")

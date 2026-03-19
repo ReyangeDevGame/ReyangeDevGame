@@ -8,6 +8,8 @@ import os
 # Ajoute le dossier 'src' au chemin Python pour les imports locaux
 sys.path.insert(0, os.path.dirname(__file__))
 from components.sidebar import render_sidebar
+from document_processor import process_pdf
+from services.cv_parser_service import parse_cv_text
 
 # ── Configuration de la page ──
 st.set_page_config(
@@ -132,8 +134,44 @@ st.markdown("""
 # ── Bouton CTA centré ──
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    if st.button("🚀 Créer mon CV", use_container_width=True, type="primary"):
+    if st.button("🚀 Créer mon CV de zéro", use_container_width=True, type="primary"):
         st.switch_page("pages/01_creer_cv.py")
+        
+    st.markdown("<div style='text-align: center; margin: 15px 0;'><strong>— OU —</strong></div>", unsafe_allow_html=True)
+    
+    uploaded_pdf = st.file_uploader("📥 Importer un CV existant (PDF)", type=["pdf"], key="home_upload")
+    if uploaded_pdf:
+        with st.spinner("Analyse du CV en cours..."):
+            try:
+                text = process_pdf(uploaded_pdf)
+                parsed_data = parse_cv_text(text)
+                
+                # Mise à jour du state
+                for key in ["name", "email", "phone", "address", "linkedin"]:
+                    val = parsed_data.get("personal_info", {}).get(key)
+                    if val:
+                        st.session_state["cv_data"]["personal_info"][key] = val
+                        st.session_state[f"input_{key}"] = val
+                        
+                if parsed_data["experiences"]:
+                    for k in list(st.session_state.keys()):
+                        if k.startswith(("exp_", "del_exp_")):
+                            del st.session_state[k]
+                    st.session_state["cv_data"]["experiences"] = parsed_data["experiences"]
+                    
+                if parsed_data["education"]:
+                    for k in list(st.session_state.keys()):
+                        if k.startswith(("edu_", "del_edu_")):
+                            del st.session_state[k]
+                    st.session_state["cv_data"]["education"] = parsed_data["education"]
+                    
+                if parsed_data["skills"]:
+                    st.session_state["cv_data"]["skills"] = parsed_data["skills"]
+                    st.session_state["input_skills"] = ", ".join(parsed_data["skills"])
+                    
+                st.switch_page("pages/01_creer_cv.py")
+            except Exception as e:
+                st.error(f"Erreur lors de l'analyse : {e}")
 
 # ── Fonctionnalités clés ──
 st.markdown("""

@@ -50,3 +50,46 @@
 - **Structure :** `src/app.py` (point d'entrée), pages Streamlit pour la navigation
 - **État :** `st.session_state` pour la persistance des données
 - **Config :** `.env` pour la clé API, `requirements.txt` pour les dépendances
+
+---
+
+## US-01 : Importation de CV au format PDF 🔴
+
+> **Sprint :** Sprint 2 — Importation & Parsing
+
+### User Story
+
+**En tant qu'** utilisateur,
+**je veux** pouvoir charger mon CV existant au format PDF,
+**afin de** pré-remplir automatiquement le formulaire avec mes informations sans avoir à tout retaper manuellement.
+
+### Critères d'Acceptation
+
+1. **Upload de fichier**
+   - [x] L'interface propose une zone d'upload de fichier (`st.file_uploader`) n'acceptant que les fichiers PDF.
+   - [x] L'application indique lorsque le fichier est chargé correctement.
+
+2. **Extraction du texte**
+   - [x] Le texte du PDF est extrait en utilisant une bibliothèque Python appropriée (ex: `PyPDF2` ou `pdfplumber`).
+
+3. **Parsing heuristique (Regex)**
+   - [x] Le texte extrait est analysé localement à l'aide de Regex et de mots-clés.
+   - [x] Les données sont extraites au format JSON correspondant à l'état attendu (Informations personnelles, Expériences, Formations, Compétences).
+
+4. **Pré-remplissage du formulaire**
+   - [x] Les données structurées remplacent ou fusionnent avec l'état `st.session_state["cv_data"]`.
+   - [x] L'aperçu du CV et le formulaire se mettent à jour avec les informations trouvées.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Upload d'un PDF valide | Le système lit le fichier et affiche un indicateur de chargement (spinner) |
+| 2 | Extraction et Parsing réussis | Les valeurs des champs du formulaire se mettent à jour et le preview change |
+| 3 | Fichier invalide/corrompu | Un message d'erreur indique que le fichier ne peut être lu |
+| 4 | Échec du parsing | Le texte est brut, invitant l'utilisateur à ajuster manuellement |
+
+### Notes techniques
+
+- **Éléments UI :** `st.file_uploader` (Streamlit).
+- **Backend/Parsing :** `PyPDF2` pour l'extraction brute, puis algorithmes de parsing Regex/mots-clés en Python pur pour isoler les sections.
