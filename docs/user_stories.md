@@ -109,16 +109,16 @@
 ### Critères d'Acceptation
 
 1. **Connexion API**
-   - [ ] L'application communique avec une API (Gemini ou OpenAI) via une clé secrète.
-   - [ ] La clé API est chargée depuis un fichier `.env` (non versionné).
+   - [x] L'application communique avec une API (Gemini ou OpenAI) via une clé secrète.
+   - [x] La clé API est chargée depuis un fichier `.env` (non versionné).
 
 2. **Parsing & Analyse IA**
-   - [ ] Le texte brut du PDF est envoyé au LLM avec un prompt structuré.
-   - [ ] Le LLM retourne un JSON structuré ou une analyse textuelle pertinente selon le projet.
+   - [x] Le texte brut du PDF est envoyé au LLM avec un prompt structuré.
+   - [x] Le LLM retourne un JSON structuré ou une analyse textuelle pertinente selon le projet.
 
 3. **Robustesse (Retry Logic)**
-   - [ ] Une logique de "Retry" (Exponential Backoff) est implémentée pour gérer les erreurs de quota (Rate Limit 429).
-   - [ ] L'utilisateur est informé en cas d'échec persistant de l'IA.
+   - [x] Une logique de "Retry" (Exponential Backoff) est implémentée pour gérer les erreurs de quota (Rate Limit 429).
+   - [x] L'utilisateur est informé en cas d'échec persistant de l'IA.
 
 ### Scénarios de test
 
@@ -150,16 +150,16 @@
 ### Critères d'Acceptation
 
 1. **Déclenchement de la génération**
-   - [x] Un bouton "✨ Suggérer un résumé" est visible dans la section "Résumé" ou "Profil" du formulaire.
-   - [x] Le bouton n'est actif que si au moins une expérience ou trois compétences sont renseignées.
+   - [ ] Un bouton "✨ Suggérer un résumé" est visible dans la section "Résumé" ou "Profil" du formulaire.
+   - [ ] Le bouton n'est actif que si au moins une expérience ou trois compétences sont renseignées.
 
 2. **Qualité du contenu**
-   - [x] L'IA utilise les données de `st.session_state["cv_data"]` pour rédiger un paragraphe de 3 à 5 lignes.
-   - [x] Le ton est professionnel, concis et adapté au profil de l'utilisateur.
+   - [ ] L'IA utilise les données de `st.session_state["cv_data"]` pour rédiger un paragraphe de 3 à 5 lignes.
+   - [ ] Le ton est professionnel, concis et adapté au profil de l'utilisateur.
 
 3. **Interaction Utilisateur**
-   - [x] Le résumé généré est inséré dans le champ de saisie correspondant.
-   - [x] L'utilisateur peut modifier ou supprimer la proposition manuellement.
+   - [ ] Le résumé généré est inséré dans le champ de saisie correspondant.
+   - [ ] L'utilisateur peut modifier ou supprimer la proposition manuellement.
 
 ### Scénarios de test
 
@@ -189,16 +189,16 @@
 ### Critères d'Acceptation
 
 1. **Interface de Chat**
-   - [ ] Une fenêtre de chat (`st.chat_message`) est accessible après l'upload du PDF.
-   - [ ] L'historique des messages est conservé pendant la session.
+   - [x] Une fenêtre de chat (`st.chat_message`) est accessible après l'upload du PDF.
+   - [x] L'historique des messages est conservé pendant la session.
 
 2. **Contexte du Document**
-   - [ ] L'IA a accès au texte intégral extrait du PDF lors de chaque réponse.
-   - [ ] L'IA refuse poliment de répondre à des questions hors sujet (non liées à la carrière ou au CV).
+   - [x] L'IA a accès au texte intégral extrait du PDF lors de chaque réponse.
+   - [x] L'IA refuse poliment de répondre à des questions hors sujet (non liées à la carrière ou au CV).
 
 3. **Réactivité**
-   - [ ] Les réponses sont générées via l'API Gemini avec un indicateur de chargement.
-   - [ ] L'application gère les erreurs de l'IA sans perdre l'historique de discussion.
+   - [x] Les réponses sont générées via l'API Gemini avec un indicateur de chargement.
+   - [x] L'application gère les erreurs de l'IA sans perdre l'historique de discussion.
 
 ### Scénarios de test
 

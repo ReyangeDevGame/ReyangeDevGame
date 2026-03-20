@@ -5,16 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Sprint 4] - 2026-03-20
-
-### ✨ Génération de Résumé par IA (US-03)
-- **Bouton Magique** : Ajout d'une fonctionnalité pour générer automatiquement un résumé professionnel.
-- **Contexte IA** : L'IA utilise les expériences et compétences du profil pour rédiger un texte concis et adapté.
-- **Interaction** : Le champ de résumé est pré-rempli et reste modifiable par l'utilisateur.
-
----
-*Sprint 4 officiellement clos et archivé.*
-
 ## [Sprint 3] - 2026-03-20
 
 ### Ajouté

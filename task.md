@@ -23,22 +23,4 @@
 
 ---
 
-## Phase actuelle : 🚀 Sprint 4 - Optimisation de Contenu (US-03 : Résumé IA)
-
-### ✅ Phase 13 : DevOps (Activation Sprint 4)
-- [x] Validation de la branche `main` pour la feature active.
-- [x] Vérification des `requirements.txt` (pas de nouvelles dépendances nécessaires pour la génération de texte avec l'API existante).
-- [x] Feu vert donné au **[CODER]**.
-
-### ✅ Phase 14 : Implémentation US-03 (Résumé IA)
-- [x] Ajout du bouton "✨ Suggérer un résumé"
-- [x] Intégration de l'appel LLM pour la génération de texte
-- [x] Validation QA
-
-### ✅ Phase 15 : Clôture (US-03)
-- [x] Mise à jour des User Stories (Critères validés)
-- [x] Mise à jour du Changelog
-
----
-
-*Sprint 4 clôturé le 2026-03-20.*
+*Sprint 3 clôturé le 2026-03-20 — Application fonctionnelle sur le port 8501.*
