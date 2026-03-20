@@ -32,16 +32,9 @@ st.session_state.setdefault("cv_data", {
     "skills": []          # Liste de strings
 })
 st.session_state.setdefault("api_key", "")
-# Garde : si la session est toute nouvelle (aucun PDF ni saisie), rediriger vers l'accueil
-if not st.session_state.get("pdf_text") and not st.session_state.get("cv_started"):
-    cv_data = st.session_state.get("cv_data", {})
-    personal = cv_data.get("personal_info", {})
-    has_data = any([
-        personal.get("name"), personal.get("email"),
-        cv_data.get("experiences"), cv_data.get("skills")
-    ])
-    if not has_data:
-        st.switch_page("app.py")
+# Garde : Si la session commence directement sur cette page (nouvel onglet, etc.), forcer l'accueil.
+if "app_init" not in st.session_state:
+    st.switch_page("app.py")
 
 # ── Barre latérale ──
 render_sidebar()
