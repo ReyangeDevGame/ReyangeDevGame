@@ -34,6 +34,11 @@ st.session_state.setdefault("api_key", "")
 # ── Injection de CSS personnalisé ──
 st.markdown("""
 <style>
+    /* ── Masquer la navigation automatique de Streamlit (app / creer cv) ── */
+    [data-testid="stSidebarNav"] {
+        display: none;
+    }
+
     /* ── Typographie et fond ── */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -122,12 +127,7 @@ render_sidebar()
 st.markdown("""
 <div class="hero-container">
     <h1>📄 Générateur de CV IA</h1>
-    <p class="subtitle">Créez un CV professionnel, optimisé et prêt à l'emploi.</p>
-    <p class="description">
-        Notre outil intelligent vous guide pas à pas dans la création de votre curriculum vitae.
-        Saisissez vos informations, laissez l'IA optimiser vos contenus
-        et exportez un CV percutant compatible avec les systèmes ATS.
-    </p>
+    <p class="subtitle">Créez ou importez votre CV en un clic.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -153,52 +153,29 @@ with col2:
                         st.session_state["cv_data"]["personal_info"][key] = val
                         st.session_state[f"input_{key}"] = val
                         
-                if parsed_data["experiences"]:
+                if parsed_data.get("experiences"):
                     for k in list(st.session_state.keys()):
                         if k.startswith(("exp_", "del_exp_")):
                             del st.session_state[k]
                     st.session_state["cv_data"]["experiences"] = parsed_data["experiences"]
                     
-                if parsed_data["education"]:
+                if parsed_data.get("education"):
                     for k in list(st.session_state.keys()):
                         if k.startswith(("edu_", "del_edu_")):
                             del st.session_state[k]
                     st.session_state["cv_data"]["education"] = parsed_data["education"]
                     
-                if parsed_data["skills"]:
+                if parsed_data.get("skills"):
                     st.session_state["cv_data"]["skills"] = parsed_data["skills"]
                     st.session_state["input_skills"] = ", ".join(parsed_data["skills"])
+                
+                # Sauvegarde du texte brut pour le Chatbot
+                st.session_state["pdf_text"] = text
                     
                 st.switch_page("pages/01_creer_cv.py")
             except Exception as e:
                 st.error(f"Erreur lors de l'analyse : {e}")
 
-# ── Fonctionnalités clés ──
-st.markdown("""
-<div class="features-grid">
-    <div class="feature-card">
-        <div class="icon">✏️</div>
-        <h3>Saisie Guidée</h3>
-        <p>Formulaire structuré pour ne rien oublier</p>
-    </div>
-    <div class="feature-card">
-        <div class="icon">🤖</div>
-        <h3>IA Assistante</h3>
-        <p>Optimisation automatique de vos descriptions</p>
-    </div>
-    <div class="feature-card">
-        <div class="icon">🌍</div>
-        <h3>Multilingue</h3>
-        <p>Traduction et adaptation internationale</p>
-    </div>
-    <div class="feature-card">
-        <div class="icon">📊</div>
-        <h3>Optimisé ATS</h3>
-        <p>Compatible avec les systèmes de recrutement</p>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 # ── Pied de page ──
 st.markdown("---")
-st.caption("💡 Propulsé par l'IA Gemini · Sprint 1 — Échafaudage")
+st.caption("💡 Propulsé par l'IA Gemini · Sprint 3")

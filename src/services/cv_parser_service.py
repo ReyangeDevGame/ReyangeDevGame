@@ -32,6 +32,35 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
     if linkedin_match:
         parsed_data["personal_info"]["linkedin"] = linkedin_match.group(0)
         
+    # Extraction de l'adresse
+    # 1. Code postal canadien (ex: G1R 2E8)
+    address_match = re.search(
+        r"[\w\s\-\.,']+,?\s*[A-Z]{2}\s*\d{5}(?:[-\s]\d{4})?",  # Format US
+        text
+    )
+    if not address_match:
+        # Code postal canadien (ex: H3B 1A1)
+        address_match = re.search(
+            r"[\w\s\-\.,']+,?\s*[A-Z]{2}\s*[A-Z]\d[A-Z]\s*\d[A-Z]\d",
+            text
+        )
+    if not address_match:
+        # Ville, Province/Pays (ex: Montréal, Québec ou Paris, France)
+        address_match = re.search(
+            r"(?:Adresse\s*:?\s*)?([A-ZÀ-Ö][\w\s\-']+,\s*[A-ZÀ-Ö][\w\s\-']{2,}(?:,\s*[A-ZÀ-Ö][\w\-']+)?)",
+            text
+        )
+    if not address_match:
+        # Ligne commençant par "Adresse" ou "Address"
+        address_line = re.search(
+            r"(?:Adresse|Address)\s*[:\-]?\s*(.+)",
+            text, re.IGNORECASE
+        )
+        if address_line:
+            parsed_data["personal_info"]["address"] = address_line.group(1).strip()
+    if address_match and not parsed_data["personal_info"]["address"]:
+        parsed_data["personal_info"]["address"] = address_match.group(0).strip()
+        
     lines = [line.strip() for line in text.split("\n") if line.strip()]
     
     # Extraction du nom très basique (1ère ligne ou 2ème)
@@ -60,7 +89,11 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
         elif any(line_lower.startswith(kw) or line_lower == kw for kw in ["formation", "education", "diplôme", "diplome", "études", "etudes"]):
             current_section = "education"
             continue
-        elif any(line_lower.startswith(kw) or line_lower == kw for kw in ["compétence", "competence", "skill", "aptitude"]):
+        elif any(line_lower.startswith(kw) or line_lower == kw for kw in [
+            "compétence", "competence", "skill", "aptitude",
+            "outils", "technologies", "logiciels", "languages",
+            "langages", "hard skills", "soft skills", "savoir-faire", "savoir faire"
+        ]):
             current_section = "skills"
             continue
             
@@ -156,12 +189,22 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
 
     # --- Parsing Compétences ---
     skill_lines = section_lines["skills"]
+    noise_words = {"de", "la", "le", "les", "et", "ou", "un", "une", "des", "du", "en", "à", "au", "par", "pour"}
+
     for line in skill_lines:
-        skills = [s.strip() for s in re.split(r'[,|•\-]', line) if s.strip()]
-        parsed_data["skills"].extend(skills)
-        
-    # Déduplication
+        parts = re.split(r'[,|\u2022/;\u00b7\u2013\u2014\t]+', line)
+        for part in parts:
+            skill = re.sub(r'^[\s\-\*\>\u2022\u25cf\u25aa]+', '', part).strip()
+            if skill and 1 < len(skill) < 60 and skill.lower() not in noise_words:
+                parsed_data["skills"].append(skill)
+
+    if not parsed_data["skills"] and skill_lines:
+        for line in skill_lines:
+            skill = line.strip()
+            if skill and len(skill) < 60 and skill.lower() not in noise_words:
+                parsed_data["skills"].append(skill)
+
     if parsed_data["skills"]:
         parsed_data["skills"] = list(dict.fromkeys(parsed_data["skills"]))
-        
+
     return parsed_data
