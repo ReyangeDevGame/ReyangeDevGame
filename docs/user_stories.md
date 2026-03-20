@@ -93,3 +93,122 @@
 
 - **Éléments UI :** `st.file_uploader` (Streamlit).
 - **Backend/Parsing :** `PyPDF2` pour l'extraction brute, puis algorithmes de parsing Regex/mots-clés en Python pur pour isoler les sections.
+
+---
+
+## US-02 : Intégration d'un LLM pour l'Analyse Avancée 🔴
+
+> **Sprint :** Sprint 3 — Connexion IA & Résilience
+
+### User Story
+
+**En tant qu'** utilisateur,
+**je veux** que mon CV soit analysé par une véritable Intelligence Artificielle (API),
+**afin d'** obtenir une structuration parfaite des données et des conseils d'optimisation (résumés, suggestions de mots-clés) que le parsing simple ne peut offrir.
+
+### Critères d'Acceptation
+
+1. **Connexion API**
+   - [ ] L'application communique avec une API (Gemini ou OpenAI) via une clé secrète.
+   - [ ] La clé API est chargée depuis un fichier `.env` (non versionné).
+
+2. **Parsing & Analyse IA**
+   - [ ] Le texte brut du PDF est envoyé au LLM avec un prompt structuré.
+   - [ ] Le LLM retourne un JSON structuré ou une analyse textuelle pertinente selon le projet.
+
+3. **Robustesse (Retry Logic)**
+   - [ ] Une logique de "Retry" (Exponential Backoff) est implémentée pour gérer les erreurs de quota (Rate Limit 429).
+   - [ ] L'utilisateur est informé en cas d'échec persistant de l'IA.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Envoi au LLM avec clé valide | Réponse structurée reçue et affichée |
+| 2 | Envoi avec clé invalide | Message d'erreur clair "Clé API invalide" |
+| 3 | Simulation d'erreur 429 (Quota) | Le système attend automatiquement avant de réessayer |
+| 4 | État hors-ligne/Pas d'Internet | Message d'erreur de connexion réseau |
+
+### Notes techniques
+
+- **Librairies :** `google-generativeai` (Gemini) ou `openai`.
+- **Secrets :** `python-dotenv` pour charger les variables d'environnement.
+- **Résilience :** Utilisation de la bibliothèque `tenacity` ou implémentation manuelle du décorateur `retry`.
+
+---
+
+## US-03 : Génération d'un Résumé Professionnel par IA 🟡
+
+> **Sprint :** Sprint 4 — Optimisation de Contenu (Prévu)
+
+### User Story
+
+**En tant qu'** utilisateur,
+**je veux** que l'IA génère automatiquement une proposition de résumé professionnel (profil) basée sur mes expériences et compétences,
+**afin de** disposer d'une introduction percutante sans avoir à la rédiger moi-même.
+
+### Critères d'Acceptation
+
+1. **Déclenchement de la génération**
+   - [x] Un bouton "✨ Suggérer un résumé" est visible dans la section "Résumé" ou "Profil" du formulaire.
+   - [x] Le bouton n'est actif que si au moins une expérience ou trois compétences sont renseignées.
+
+2. **Qualité du contenu**
+   - [x] L'IA utilise les données de `st.session_state["cv_data"]` pour rédiger un paragraphe de 3 à 5 lignes.
+   - [x] Le ton est professionnel, concis et adapté au profil de l'utilisateur.
+
+3. **Interaction Utilisateur**
+   - [x] Le résumé généré est inséré dans le champ de saisie correspondant.
+   - [x] L'utilisateur peut modifier ou supprimer la proposition manuellement.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Clic sur "Suggérer" (données présentes) | Un texte cohérent apparaît dans le champ "Résumé" |
+| 2 | Clic sur "Suggérer" (données absentes) | Un message d'avertissement demande de renseigner des expériences d'abord |
+| 3 | Modification manuelle après génération | Le texte modifié est conservé dans la session |
+
+### Notes techniques
+
+- **Prompting :** Utiliser un "System Instruction" spécifique pour le style de rédaction.
+- **UI :** `st.button` et `st.text_area` (Streamlit).
+
+---
+
+## US-04 : Chatbot de Conseil de Carrière (IA + PDF) 🔴
+
+> **Sprint :** Sprint 3 — Interaction & Support IA
+
+### User Story
+
+**En tant qu'** utilisateur ayant uploadé mon CV,
+**je veux** pouvoir discuter avec une IA via un chat,
+**afin de** poser des questions sur mon profil, demander des conseils de personnalisation ou préparer une entrevue en me basant sur les informations de mon PDF.
+
+### Critères d'Acceptation
+
+1. **Interface de Chat**
+   - [ ] Une fenêtre de chat (`st.chat_message`) est accessible après l'upload du PDF.
+   - [ ] L'historique des messages est conservé pendant la session.
+
+2. **Contexte du Document**
+   - [ ] L'IA a accès au texte intégral extrait du PDF lors de chaque réponse.
+   - [ ] L'IA refuse poliment de répondre à des questions hors sujet (non liées à la carrière ou au CV).
+
+3. **Réactivité**
+   - [ ] Les réponses sont générées via l'API Gemini avec un indicateur de chargement.
+   - [ ] L'application gère les erreurs de l'IA sans perdre l'historique de discussion.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Question sur l'expérience | L'IA cite des éléments précis du PDF uploadé |
+| 2 | Question "Comment améliorer mon CV ?" | L'IA propose des suggestions basées sur le contenu détecté |
+| 3 | Question hors-sujet (ex: météo) | L'IA redirige vers le sujet professionnel |
+
+### Notes techniques
+
+- **Modèle :** `gemini-1.5-flash` avec injection de contexte (System Message).
+- **Session State :** Stockage de l'historique dans `st.session_state["messages"]`.
