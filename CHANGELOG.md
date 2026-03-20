@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 4] - 2026-03-20
+
+### ✨ Génération de Résumé par IA (US-03)
+- **Bouton Magique** : Ajout d'une fonctionnalité pour générer automatiquement un résumé professionnel.
+- **Contexte IA** : L'IA utilise les expériences et compétences du profil pour rédiger un texte concis et adapté.
+- **Interaction** : Le champ de résumé est pré-rempli et reste modifiable par l'utilisateur.
+
+---
+*Sprint 4 officiellement clos et archivé.*
+
+## [Sprint 3] - 2026-03-20
+
+### Ajouté
+- Spécification technique pour l'intégration d'une API LLM réelle.
+- Plan de Test QA pour la résilience et la sécurité API.
+- Nouveau service `src/services/llm_service.py` pour la communication avec Gemini.
+- Logique de Retry (Exponential Backoff) pour la robustesse des appels API.
+
+### Modifié
+- Sécurisation de l'application via `.env`.
+- Mise à jour de l'interface `app.py` pour traiter les CV via l'IA.
+
 ## [1.1.0] - 2026-03-19
 
 ### ✨ Importation de CV PDF (Sprint 2 / US-01)

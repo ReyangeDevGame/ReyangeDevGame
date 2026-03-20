@@ -1,39 +1,44 @@
 # Suivi de Projet — Générateur de CV IA
 
-## Phase actuelle : 🏗️ Prêt pour le Développement US-01 (Sprint 2)
+## Phase actuelle : 🚀 Sprint 3 - Intégration LLM & Résilience (Conception)
 
 ---
-
-### ✅ Phase 5 : DevOps (Activation Sprint 2)
-- [x] Initialisation Git et branche `feature/US01-import-pdf`
-- [x] Mise à jour du Backlog
-- [x] Vérification des requirements
-
-### [x] Phase 6 : Conception et Raffinage US-01 (Import PDF)
-- [x] Activer le rôle **[BUSINESS_ANALYST]** : Rédaction de l'US-01 (Import PDF) dans `docs/user_stories.md`
-- [x] Activer le rôle **[ARCHITECT]** pour planifier l'US-01
-- [x] Rédaction de la spec technique (`docs/specs/US01_spec.md`)
-- [x] Le plan technique de l'US-01 est prêt et validé.
-
-### [x] Phase 7 : Développement US-01 (Import PDF)
-- [x] Création des services `pdf_service.py` et `cv_parser_service.py`
-- [x] Intégration de l'interface PDF dans `01_creer_cv.py`
-- [x] Prêt pour le QA (Test).
-
-### ✅ Phase 8 : QA (Validation de l'US-01)
-- [x] Créer un "Plan de Test Manuel" (Checklist) dans `docs/reports/US01_test_plan.md`
-- [x] Exécuter les tests manuels
-
-### ✅ Phase 9 : Clôture (US-01)
-- [x] Mise à jour des User Stories (Critères d'acceptation validés)
-- [x] Mise à jour du Changelog
-- [x] Initialisation de la rétrospective (`docs/retrospectives/SPRINT_02.md`)
 
 ### ✅ Phase 10 : Archivage & Synthèse (Fin de Sprint 2)
 - [x] Compilation de la synthèse globale (`docs/reports/SPRINT_02_summary.md`)
 - [x] Déplacement des spécifications US-01 vers `./docs/archive/`
 - [x] Déplacement de la rétrospective SPRINT_02 vers `./docs/archive/`
 
+### ✅ Phase 11 : Raffinage Sprint 3 (Chatbot IA — US-04)
+- [x] Rôle **[BA]** : Définition de l'US-04 (Chatbot) dans `docs/user_stories.md`
+- [x] Rôle **[ARCHITECT]** : Mise à jour de la spec `docs/specs/003_llm_integration.md`
+- [x] Rôle **[CODER]** : Implémentation du Chatbot dans `app.py`
+- [x] Rôle **[QA]** : Mise à jour du Test Plan `docs/reports/US02_test_plan.md`
+
+### ✅ Phase 12 : Généralisation de l'Analyse IA (US-02)
+- [x] Rôle **[ARCHITECT]** : Rédaction de la spec technique `docs/specs/US02_spec.md`
+- [x] Rôle **[CODER]** : Migration de `01_creer_cv.py` du Regex vers le `llm_service`
+- [x] Rôle **[CODER]** : Harmonisation de la gestion des erreurs et de l'état (st.session_state)
+- [x] Rôle **[QA]** : Validation finale UI/IA réussie.
+
 ---
 
-*Sprint 2 clôturé et archivé par le Business Analyst le 19 Mars 2026. Prêt pour le Sprint 3.*
+## Phase actuelle : 🚀 Sprint 4 - Optimisation de Contenu (US-03 : Résumé IA)
+
+### ✅ Phase 13 : DevOps (Activation Sprint 4)
+- [x] Validation de la branche `main` pour la feature active.
+- [x] Vérification des `requirements.txt` (pas de nouvelles dépendances nécessaires pour la génération de texte avec l'API existante).
+- [x] Feu vert donné au **[CODER]**.
+
+### ✅ Phase 14 : Implémentation US-03 (Résumé IA)
+- [x] Ajout du bouton "✨ Suggérer un résumé"
+- [x] Intégration de l'appel LLM pour la génération de texte
+- [x] Validation QA
+
+### ✅ Phase 15 : Clôture (US-03)
+- [x] Mise à jour des User Stories (Critères validés)
+- [x] Mise à jour du Changelog
+
+---
+
+*Sprint 4 clôturé le 2026-03-20.*

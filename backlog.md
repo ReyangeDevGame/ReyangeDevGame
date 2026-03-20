@@ -15,6 +15,9 @@
 
 > Idées à raffiner lors des prochains sprints.
 
-- [ ] **US-02** : Rédaction Assistée par IA
+- [ ] **US-02** : Rédaction Assistée par IA (En cours)
 - [ ] **US-03** : Optimisation ATS et Export
-- [ ] **US-04** : Importation et Parsing de CV Existant
+- [ ] **US-04** : Importation et Parsing de CV Existant (Terminé en Regex, à migrer IA)
+- [ ] **IDEE** : Génération de questions d'entrevue basées sur le CV
+- [ ] **IDEE** : Résumé professionnel généré par IA
+- [ ] **IDEE** : Analyse de compatibilité avec une offre d'emploi
