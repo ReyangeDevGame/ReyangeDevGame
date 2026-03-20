@@ -21,6 +21,11 @@
 - [x] Rôle **[CODER]** : Harmonisation de la gestion des erreurs et de l'état (st.session_state)
 - [x] Rôle **[QA]** : Validation finale UI/IA réussie.
 
+### ✅ Phase 13 : Archivage & Synthèse (Fin de Sprint 3)
+- [x] Compilation de la synthèse globale (`docs/reports/SPRINT_03_summary.md`)
+- [x] Déplacement des spécifications techniques vers `./docs/archive/`
+- [x] Déplacement de la rétrospective SPRINT_03 vers `./docs/archive/`
+
 ---
 
-*Sprint 3 clôturé le 2026-03-20 — Application fonctionnelle sur le port 8501.*
+*Sprint 3 clôturé et archivé par le Business Analyst le 2026-03-20. L'application est désormais propulsée par l'Intelligence Artificielle !*
