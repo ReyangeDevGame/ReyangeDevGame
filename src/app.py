@@ -20,6 +20,8 @@ st.set_page_config(
 )
 
 # ── Initialisation de l'état de session ──
+st.session_state["app_init"] = True
+
 st.session_state.setdefault("cv_data", {
     "personal_info": {
         "name": "", "email": "", "phone": "",
