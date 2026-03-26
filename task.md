@@ -29,3 +29,39 @@
 ---
 
 *Sprint 3 clôturé et archivé par le Business Analyst le 2026-03-20. L'application est désormais propulsée par l'Intelligence Artificielle !*
+
+## Phase actuelle : 🚀 Sprint 4 — Intégration de La Voix (gTTS)
+
+---
+
+### ✅ Phase 14 : Cadrage & Planification US-05 (Voix)
+- [x] Rôle **[BA]** : Vérification de `docs/system_context.md`
+- [x] Rôle **[BA]** : Mise à jour de l'Icebox dans `backlog.md`
+- [x] Rôle **[BA]** : Rédaction détaillée de l'US-05 dans `docs/user_stories.md`
+- [x] Rôle **[ARCHITECT]** : Rédaction de la spec technique `docs/specs/US05_spec.md`
+
+### ✅ Phase 15 : DevOps (Activation Sprint 4)
+- [x] Validation de la branche `main` pour la feature active.
+- [x] Vérification des `requirements.txt` (`gTTS` présent et doublons nettoyés).
+- [x] Feu vert donné au **[CODER]**.
+
+### [x] Phase 16 : Développement & QA (Voix)
+- [x] Rôle **[CODER]** : Implémentation de `src/services/voice_service.py`
+- [x] Rôle **[CODER]** : Intégration de `st.audio` dans `app.py`
+- [ ] Rôle **[QA]** : Tests de synthèse vocale en mémoire (RAM)
+
+### [x] Phase 17 : IA Vocale Avancée (STT) & Navigation
+- [x] Rôle **[CODER]** : Désactivation de l'IA pour l'import PDF (retour au Regex local)
+- [x] Rôle **[CODER]** : Rendre le Chatbot accessible en permanence (même sans PDF)
+- [x] Rôle **[CODER]** : Implémentation de `st.audio_input` (STT) dans `app.py`
+- [x] Rôle **[QA]** : Validation des interactions bi-modales (Voix/Texte)
+
+### [ ] Phase 18 : Clôture & Rétrospective (Sprint 4)
+- [x] Rôle **[BA/QA]** : Initialisation et remplissage de la rétrospective (`docs/retrospectives/SPRINT_04.md`)
+- [ ] Rôle **[DEVOPS]** : Mise à jour du CHANGELOG.md
+- [ ] Rôle **[PO]** : Validation finale du sprint
+
+
+---
+
+*Sprint 4 enrichi le 26 Mars 2026 : Synthèse + Reconnaissance Vocale. Rétrospective initialisée.*

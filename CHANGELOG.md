@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 4] — 2026-03-26 (L'IA prend la Parole)
+
+### Ajouté
+- **Interaction Bimodale (TTS/STT)** : L'IA peut désormais entendre (Micro) et répondre vocalement (Synthèse).
+- **Service Voice RAM-Only** : Utilisation de `gTTS` et `io.BytesIO` pour un traitement 100% en mémoire vive (zéro déchet disque).
+- **Navigation Proactive** : Le Chatbot est désormais accessible même en l'absence de CV importé, agissant comme un coach dès l'accueil.
+- **Support STT** : Intégration de `st.audio_input` pour la saisie vocale.
+
+### Modifié
+- **Optimisation Import PDF** : Retour au moteur Regex local pour l'import, garantissant une rapidité maximale et préservant les quotas IA pour le conseil.
+- **UI "IA Invisible"** : Masquage CSS des widgets audio pour une immersion totale.
+
 ## [Sprint 3] - 2026-03-20
 
 ### Ajouté

@@ -21,3 +21,5 @@
 - [ ] **IDEE** : Génération de questions d'entrevue basées sur le CV
 - [ ] **IDEE** : Résumé professionnel généré par IA
 - [ ] **IDEE** : Analyse de compatibilité avec une offre d'emploi
+- [ ] **Sprint Y** : Analyse de Sentiment (Évaluation du ton de l'IA/Document)
+- [ ] **Sprint Z** : La Touche Finale (Bannière, couleurs, ergonomie, polissage UI)

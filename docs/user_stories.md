@@ -176,6 +176,37 @@
 
 ---
 
+## US-05 : Synthèse Vocale (Text-To-Speech) 🟡
+
+> **Sprint :** Sprint 4 — L'Application prend la Parole
+
+### User Story
+
+**En tant qu'** utilisateur du Chatbot,
+**je veux** pouvoir écouter à voix haute les conseils générés par l'IA,
+**afin de** rendre l'expérience plus interactive et accessible.
+
+### Critères d'Acceptation
+
+1. **Génération Audio**
+   - [ ] L'application utilise `gTTS` pour convertir le texte de l'IA en voix.
+   - [ ] L'application gère l'audio en mémoire pure via un flux binaire, sans écrire de fichiers `.mp3` physiques locaux.
+2. **Interface Native**
+   - [ ] Un composant `st.audio` natif de Streamlit permet à l'utilisateur de lire le son sous le message.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | L'IA donne une réponse | Un lecteur audio apparaît, la voix lit le français correctement |
+| 2 | Vérification mémoire locale | Aucun fichier audio temporaire n'est présent à la racine du dossier |
+
+### Notes techniques
+- **Librairie :** `gTTS`, `io.BytesIO`.
+
+
+---
+
 ## US-04 : Chatbot de Conseil de Carrière (IA + PDF) 🔴
 
 > **Sprint :** Sprint 3 — Interaction & Support IA

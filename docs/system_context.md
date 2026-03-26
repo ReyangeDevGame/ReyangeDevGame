@@ -19,7 +19,8 @@ Créer un **générateur de CV intelligent** qui permet à tout utilisateur de c
 2. **Traduction & Adaptation multilingue** — Traduire le contenu du CV dans différentes langues et adapter la mise en forme aux conventions locales.
 3. **Modèles personnalisables** — Proposer plusieurs templates de CV professionnels que l'utilisateur peut personnaliser (couleurs, polices, disposition).
 4. **Rédaction assistée par IA** — Suggérer des formulations, améliorer les descriptions d'expériences et générer des résumés professionnels via un LLM.
-5. **Optimisation ATS & Export** — Analyser le CV pour sa compatibilité avec les systèmes de suivi des candidatures (ATS) et exporter en PDF/DOCX.
+5. **Synthèse Vocale (Voice)** — Convertir les réponses du Chatbot en audio pour une interaction immersive.
+6. **Optimisation ATS & Export** — Analyser le CV pour sa compatibilité avec les systèmes de suivi des candidatures (ATS) et exporter en PDF/DOCX.
 
 ## 4. Contraintes Techniques
 

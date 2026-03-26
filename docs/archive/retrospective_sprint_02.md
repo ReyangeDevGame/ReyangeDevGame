@@ -2,7 +2,7 @@
 
 > **Rapport de Clôture**  
 > **Auteur :** Business Analyst  
-> **Statut :** Architvé ✅
+> **Statut :** Archivé ✅
 
 ## 📊 Résumé Exécutif
 

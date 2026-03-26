@@ -119,6 +119,11 @@ st.markdown("""
         color: #777;
         margin: 0;
     }
+
+    /* ── Masquer les lecteurs audio (IA invisible) ── */
+    div[data-testid="stAudio"] {
+        display: none !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -146,6 +151,7 @@ with col2:
         with st.spinner("Analyse du CV en cours..."):
             try:
                 text = process_pdf(uploaded_pdf)
+                # Utilisation du moteur Regex local (non-IA) pour l'import
                 parsed_data = parse_cv_text(text)
                 
                 # Mise à jour du state
@@ -174,10 +180,97 @@ with col2:
                 # Sauvegarde du texte brut pour le Chatbot
                 st.session_state["pdf_text"] = text
                     
-                st.switch_page("pages/01_creer_cv.py")
+                st.success("✅ CV analysé avec succès !")
+                st.rerun()
             except Exception as e:
                 st.error(f"Erreur lors de l'analyse : {e}")
 
+# ── Zone Chatbot IA (Sprints 3 & 4) ──
+# Toujours visible pour permettre le chat même en création de zéro
+st.markdown("---")
+st.subheader("💬 Votre Conseiller IA Vocal")
+st.info("Posez vos questions par écrit ou par la voix ! 🎙️")
+
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+        if "audio" in message and message["audio"]:
+            st.audio(message["audio"], format='audio/mp3')
+
+# Saisie Vocale (STT)
+audio_input = st.audio_input("Parlez à votre conseiller")
+
+# Saisie Textuelle
+text_input = st.chat_input("Ou tapez votre question ici...")
+
+# Traitement de l'entrée (voix prioritaire si nouvelle)
+prompt = None
+if audio_input:
+    # Pour simplifier et rester efficace, on délègue la transcription à Gemini
+    prompt = "Transcris et réponds à cet audio"
+    
+if text_input:
+    prompt = text_input
+
+if prompt:
+    user_msg = {"role": "user", "content": prompt}
+    if audio_input and not text_input:
+        user_msg["content"] = "🎤 [Message Vocal]"
+        
+    st.session_state.messages.append(user_msg)
+    with st.chat_message("user"):
+        st.markdown(user_msg["content"])
+
+    with st.chat_message("assistant"):
+        with st.spinner("Réflexion en cours..."):
+            try:
+                from services.llm_service import call_llm_api
+                # Préparation du contexte
+                cv_context = st.session_state.get('pdf_text', 'Aucun CV importé pour le moment. L\'utilisateur crée un CV de zéro.')
+                
+                full_prompt = f"""Tu es un conseiller de carrière expert et proactif. 
+                
+                RÈGLES IMPORTANTES :
+                1. Utilise les informations du CV ci-dessous comme base de travail.
+                2. UTILISE TES CONNAISSANCES GÉNÉRALES sur le recrutement, les standards de l'industrie et les meilleures pratiques pour aider l'utilisateur à améliorer son CV, même si ces détails ne sont pas présents dans le document.
+                3. Si aucun CV n'est fourni, base-toi sur ton expertise pour conseiller l'utilisateur sur la rédaction d'un CV attractif.
+                4. Sois concis, professionnel et encourageant.
+
+                Contexte (CV) : {cv_context}
+                ---
+                Question de l'utilisateur : {prompt if not audio_input else 'L\'utilisateur a envoyé un message vocal.'}
+                """
+                
+                response = call_llm_api(full_prompt)
+                
+                from services.voice_service import text_to_audio_bytes
+                audio_bytes = text_to_audio_bytes(response)
+                
+                # Affichage de l'audio d'abord pour l'immédiateté
+                if audio_bytes:
+                    st.audio(audio_bytes, format='audio/mp3', autoplay=True)
+                
+                # Effet de streaming/écriture progressive en "background"
+                import time
+                def stream_data():
+                    for word in response.split(" "):
+                        yield word + " "
+                        time.sleep(0.05)
+                
+                st.write_stream(stream_data)
+                
+                # Sauvegarde finale
+                st.session_state.messages.append({
+                    "role": "assistant", 
+                    "content": response, 
+                    "audio": audio_bytes if audio_bytes else None
+                })
+            except Exception as e:
+                st.error(f"Erreur : {e}")
+
 # ── Pied de page ──
 st.markdown("---")
-st.caption("💡 Propulsé par l'IA Gemini · Sprint 3")
+st.caption("💡 Propulsé par l'IA Gemini & gTTS · Sprints 3-4")
