@@ -17,23 +17,23 @@
 ### Critères d'Acceptation
 
 1. **Structure de l'application**
-   - [ ] L'application Streamlit démarre sans erreur avec `streamlit run`.
-   - [ ] Le projet suit une structure de fichiers organisée (`src/`, config, etc.).
-   - [ ] Les dépendances sont listées dans un `requirements.txt` fonctionnel.
+   - [x] L'application Streamlit démarre sans erreur avec `streamlit run`.
+   - [x] Le projet suit une structure de fichiers organisée (`src/`, config, etc.).
+   - [x] Les dépendances sont listées dans un `requirements.txt` fonctionnel.
 
 2. **Page d'accueil**
-   - [ ] La page affiche un titre, un sous-titre et une brève description de l'application.
-   - [ ] Un bouton ou lien **"🚀 Créer mon CV"** est visible et mène vers le formulaire de saisie.
-   - [ ] Le design est soigné et professionnel (couleurs, typographie, espacement).
+   - [x] La page affiche un titre, un sous-titre et une brève description de l'application.
+   - [x] Un bouton ou lien **"🚀 Créer mon CV"** est visible et mène vers le formulaire de saisie.
+   - [x] Le design est soigné et professionnel (couleurs, typographie, espacement).
 
 3. **Navigation de base**
-   - [ ] Une barre latérale (sidebar) ou un menu permet de naviguer entre les sections futures.
-   - [ ] La configuration API (clé Gemini) est accessible via la sidebar ou un fichier `.env`.
+   - [x] Une barre latérale (sidebar) ou un menu permet de naviguer entre les sections futures.
+   - [x] La configuration API (clé Gemini) est accessible via la sidebar ou un fichier `.env`.
 
 4. **Formulaire de saisie (structure de base)**
-   - [ ] Une page "Créer mon CV" contient un formulaire avec les sections : Informations personnelles, Expériences, Formations, Compétences.
-   - [ ] Les données saisies sont conservées dans `st.session_state`.
-   - [ ] Un aperçu basique du CV est visible à côté du formulaire.
+   - [x] Une page "Créer mon CV" contient un formulaire avec les sections : Informations personnelles, Expériences, Formations, Compétences.
+   - [x] Les données saisies sont conservées dans `st.session_state`.
+   - [x] Un aperçu basique du CV est visible à côté du formulaire.
 
 ### Scénarios de test
 
@@ -150,16 +150,16 @@
 ### Critères d'Acceptation
 
 1. **Déclenchement de la génération**
-   - [ ] Un bouton "✨ Suggérer un résumé" est visible dans la section "Résumé" ou "Profil" du formulaire.
-   - [ ] Le bouton n'est actif que si au moins une expérience ou trois compétences sont renseignées.
+   - [x] Un bouton "✨ Suggérer un résumé" est visible dans la section "Résumé" ou "Profil" du formulaire.
+   - [x] Le bouton n'est actif que si au moins une expérience ou trois compétences sont renseignées.
 
 2. **Qualité du contenu**
-   - [ ] L'IA utilise les données de `st.session_state["cv_data"]` pour rédiger un paragraphe de 3 à 5 lignes.
-   - [ ] Le ton est professionnel, concis et adapté au profil de l'utilisateur.
+   - [x] L'IA utilise les données de `st.session_state["cv_data"]` pour rédiger un paragraphe de 3 à 5 lignes.
+   - [x] Le ton est professionnel, concis et adapté au profil de l'utilisateur.
 
 3. **Interaction Utilisateur**
-   - [ ] Le résumé généré est inséré dans le champ de saisie correspondant.
-   - [ ] L'utilisateur peut modifier ou supprimer la proposition manuellement.
+   - [x] Le résumé généré est inséré dans le champ de saisie correspondant.
+   - [x] L'utilisateur peut modifier ou supprimer la proposition manuellement.
 
 ### Scénarios de test
 
@@ -189,10 +189,10 @@
 ### Critères d'Acceptation
 
 1. **Génération Audio**
-   - [ ] L'application utilise `gTTS` pour convertir le texte de l'IA en voix.
-   - [ ] L'application gère l'audio en mémoire pure via un flux binaire, sans écrire de fichiers `.mp3` physiques locaux.
+   - [x] L'application utilise `gTTS` pour convertir le texte de l'IA en voix.
+   - [x] L'application gère l'audio en mémoire pure via un flux binaire, sans écrire de fichiers `.mp3` physiques locaux.
 2. **Interface Native**
-   - [ ] Un composant `st.audio` natif de Streamlit permet à l'utilisateur de lire le son sous le message.
+   - [x] Un composant `st.audio` natif de Streamlit permet à l'utilisateur de lire le son sous le message.
 
 ### Scénarios de test
 
@@ -242,4 +242,35 @@
 ### Notes techniques
 
 - **Modèle :** `gemini-1.5-flash` avec injection de contexte (System Message).
-- **Session State :** Stockage de l'historique dans `st.session_state["messages"]`.
+---
+
+## US-06 : Analyse de Sentiment & Feedback Visuel 🟡
+
+> **Sprint :** Sprint 5 — Analyse & Perception
+
+### User Story
+
+**En tant qu'** utilisateur,
+**je veux** que l'IA évalue le ton de mon CV ou de ses propres conseils (enthousiasme, professionnalisme, confiance),
+**afin de** visualiser mon impact perçu à travers des indicateurs graphiques (jauges, scores).
+
+### Critères d'Acceptation
+
+1.  **Analyse de Ton**
+    - [x] L'IA (Gemini) retourne un score de sentiment (ex: 0 à 100) ou des étiquettes (ex: "Très Professionnel", "Créatif").
+    - [x] L'analyse porte soit sur une section du CV, soit sur la dernière réponse du conseiller.
+
+2.  **Rendu Visuel**
+    - [x] Un indicateur visuel (jauge ou barre de progression) s'affiche dans l'interface.
+    - [x] Des icônes ou couleurs dynamiques reflètent le "mood" détecté.
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Analyse d'un CV "froid" | La jauge indique un ton "Formel / Neutre" |
+| 2 | Analyse d'un CV "dynamique" | Le score de confiance ou d'enthousiasme augmente |
+
+### Notes techniques
+- **Modèle :** Utilisation d'un prompt "Few-shot" pour classer les sentiments.
+- **Visualisation :** `st.progress` ou composants HTML personnalisés.

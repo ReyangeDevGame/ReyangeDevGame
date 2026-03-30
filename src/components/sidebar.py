@@ -77,4 +77,4 @@ Question : {user_input}
                     st.session_state["messages"] = []
                     st.rerun()
         else:
-            st.info("📥 Importez un CV pour activer le conseiller IA.", icon="ℹ️")
+            pass

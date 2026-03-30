@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from components.sidebar import render_sidebar
 from document_processor import process_pdf
 from services.cv_parser_service import parse_cv_text
+from services.llm_service import call_llm_api
+from services.voice_service import text_to_audio_bytes
 
 # ── Configuration de la page ──
 st.set_page_config(
@@ -199,6 +201,28 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
         if "audio" in message and message["audio"]:
             st.audio(message["audio"], format='audio/mp3')
+        
+        # Affichage du Sentiment (US-06) — st.metric coloré
+        if "sentiment" in message:
+            s = message["sentiment"]
+            emo = s.get("emoji", "🎭")
+            score = s.get("score", 0)
+            label_text = f"{emo} {s['label']}"
+            
+            # Delta positif (vert) si score >= 50, négatif (rouge) sinon
+            delta_val = score - 50
+            delta_label = "Positif" if delta_val >= 0 else "Négatif"
+            
+            col_m1, col_m2 = st.columns([1, 2])
+            with col_m1:
+                st.metric(
+                    label=label_text,
+                    value=f"{score}/100",
+                    delta=f"{delta_label} ({s['tone']})",
+                    delta_color="normal" if delta_val >= 0 else "inverse"
+                )
+            with col_m2:
+                st.progress(score / 100)
 
 # Saisie Vocale (STT)
 audio_input = st.audio_input("Parlez à votre conseiller")
@@ -216,23 +240,31 @@ if text_input:
     prompt = text_input
 
 if prompt:
-    user_msg = {"role": "user", "content": prompt}
+    from services.llm_service import analyze_sentiment, call_llm_api
+    
+    # Analyse de sentiment de l'utilisateur (US-06)
+    user_sentiment = analyze_sentiment(prompt)
+    
+    user_msg = {"role": "user", "content": prompt, "sentiment": user_sentiment}
     if audio_input and not text_input:
         user_msg["content"] = "🎤 [Message Vocal]"
         
     st.session_state.messages.append(user_msg)
     with st.chat_message("user"):
         st.markdown(user_msg["content"])
+        st.caption(f"{user_sentiment['emoji']} {user_sentiment['label']}")
 
     with st.chat_message("assistant"):
         with st.spinner("Réflexion en cours..."):
             try:
-                from services.llm_service import call_llm_api
                 # Préparation du contexte
                 cv_context = st.session_state.get('pdf_text', 'Aucun CV importé pour le moment. L\'utilisateur crée un CV de zéro.')
                 
                 full_prompt = f"""Tu es un conseiller de carrière expert et proactif. 
                 
+                HUMEUR DE L'UTILISATEUR : {user_sentiment['label']} ({user_sentiment['tone']})
+                Adapte ton ton à l'humeur de l'utilisateur (sois encourageant s'il est triste, enthousiaste s'il est joyeux).
+
                 RÈGLES IMPORTANTES :
                 1. Utilise les informations du CV ci-dessous comme base de travail.
                 2. UTILISE TES CONNAISSANCES GÉNÉRALES sur le recrutement, les standards de l'industrie et les meilleures pratiques pour aider l'utilisateur à améliorer son CV, même si ces détails ne sont pas présents dans le document.
@@ -246,7 +278,6 @@ if prompt:
                 
                 response = call_llm_api(full_prompt)
                 
-                from services.voice_service import text_to_audio_bytes
                 audio_bytes = text_to_audio_bytes(response)
                 
                 # Affichage de l'audio d'abord pour l'immédiateté
@@ -260,17 +291,43 @@ if prompt:
                         yield word + " "
                         time.sleep(0.05)
                 
-                st.write_stream(stream_data)
+                st.write_stream(stream_data())
+                
+                # Analyse de sentiment (US-06)
+                from services.llm_service import analyze_sentiment
+                sentiment = analyze_sentiment(response)
                 
                 # Sauvegarde finale
                 st.session_state.messages.append({
                     "role": "assistant", 
                     "content": response, 
-                    "audio": audio_bytes if audio_bytes else None
+                    "audio": audio_bytes if audio_bytes else None,
+                    "sentiment": sentiment
                 })
             except Exception as e:
                 st.error(f"Erreur : {e}")
 
-# ── Pied de page ──
-st.markdown("---")
-st.caption("💡 Propulsé par l'IA Gemini & gTTS · Sprints 3-4")
+# ── Pied de page (Fixé sous la barre de chat) ──
+st.markdown("""
+<style>
+    /* Optionnel: Remonter légèrement la barre de chat si nécessaire */
+    div[data-testid="stChatInput"] {
+        margin-bottom: 25px !important;
+    }
+    
+    .footer-custom {
+        position: fixed;
+        bottom: 5px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #888;
+        z-index: 99999;
+        pointer-events: none;
+    }
+</style>
+<div class="footer-custom">
+    💡 Propulsé par l'IA Gemini & gTTS · Sprints 3-4
+</div>
+""", unsafe_allow_html=True)

@@ -148,3 +148,42 @@ def parse_cv_with_ai(cv_text: str):
             "education": [],
             "skills": []
         }
+
+def analyze_sentiment(text: str) -> dict:
+    """
+    Analyse le sentiment, le ton et le professionnalisme du texte.
+    Retourne un dictionnaire {score, label, tone}.
+    """
+    prompt = f"""
+    Tu es un expert en analyse de discours et en recrutement. 
+    Évalue le texte suivant sur une échelle de 0 à 100 en termes d'impact professionnel et de clarté.
+    Identifie également le ton dominant, un label court et un EMOJI représentatif.
+
+    RETOURNE UNIQUEMENT UN JSON STRICT AU FORMAT SUIVANT :
+    {{
+        "score": 85,
+        "label": "Très Professionnel",
+        "tone": "Confident",
+        "emoji": "🚀"
+    }}
+
+    TEXTE À ANALYSER :
+    ---
+    {text}
+    ---
+    """
+    
+    try:
+        raw_response = call_llm_api(prompt)
+        
+        # Nettoyage JSON
+        clean_json = raw_response.strip()
+        if clean_json.startswith("```"):
+            clean_json = clean_json.split("```")[1]
+            if clean_json.startswith("json"):
+                clean_json = clean_json[4:]
+        
+        return json.loads(clean_json)
+    except Exception as e:
+        # Fallback silencieux avec structure par défaut
+        return {"score": 0, "label": "Analyse indisponible", "tone": "Inconnu", "emoji": "❔"}

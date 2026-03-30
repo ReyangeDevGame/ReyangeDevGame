@@ -56,12 +56,40 @@
 - [x] Rôle **[CODER]** : Implémentation de `st.audio_input` (STT) dans `app.py`
 - [x] Rôle **[QA]** : Validation des interactions bi-modales (Voix/Texte)
 
-### [ ] Phase 18 : Clôture & Rétrospective (Sprint 4)
+### ✅ Phase 18 : Clôture & Rétrospective (Sprint 4)
 - [x] Rôle **[BA/QA]** : Initialisation et remplissage de la rétrospective (`docs/retrospectives/SPRINT_04.md`)
-- [ ] Rôle **[DEVOPS]** : Mise à jour du CHANGELOG.md
-- [ ] Rôle **[PO]** : Validation finale du sprint
+- [x] Rôle **[DEVOPS]** : Archivage des documents et mise à jour du CHANGELOG.md
+- [x] Rôle **[PO]** : Validation finale du sprint
 
+### ✅ Phase 18.1 : DevOps (Activation Sprint 5)
+- [x] Validation de la branche `main` pour la feature active.
+- [x] Vérification des `requirements.txt` (OK, `google-generativeai` déjà présent).
+- [x] Feu vert donné au **[CODER]**.
 
 ---
 
-*Sprint 4 enrichi le 26 Mars 2026 : Synthèse + Reconnaissance Vocale. Rétrospective initialisée.*
+*Sprint 4 clôturé le 29 Mars 2026. L'interaction vocale est stable.*
+
+## Phase actuelle : 🚀 Sprint 5 — Analyse de Sentiment & Feedback
+
+---
+
+### ✅ Phase 19 : Planification US-06 (Analyse de Sentiment)
+- [x] Rôle **[BA]** : Rédaction de l'US-06 dans `docs/user_stories.md`
+- [x] Rôle **[BA]** : Mise à jour du `backlog.md`
+- [x] Rôle **[BA]** : Validation de la vision du sprint (Sentiment & Feedback)
+- [x] Rôle **[ARCHITECT]** : Rédaction de la spec technique `docs/specs/US06_spec.md`
+
+### [x] Phase 20 : Développement & QA (Sentiment)
+- [x] Rôle **[CODER]** : Implémentation d' `analyze_sentiment` dans `llm_service.py`
+- [x] Rôle **[CODER]** : Intégration de l'indicateur visuel dans `app.py`
+- [x] Rôle **[QA]** : Validation fonctionnelle des scores et feedback visuel effectuée.
+
+### ✅ Phase 21 : Clôture & Synthèse (Sprint 5)
+- [x] Rôle **[DEVOPS]** : Mise à jour des User Stories et du CHANGELOG.md
+- [x] Rôle **[BA]** : Rédaction de la synthèse globale (`docs/archive/retrospective_sprint_05.md`)
+- [x] Rôle **[PO]** : Validation finale du sprint
+
+---
+
+*Sprint 5 clôturé le 30 Mars 2026. L'application est désormais capable d'empathie analytique !*

@@ -1,13 +1,12 @@
 # Backlog Produit — Générateur de CV IA
 
-## 🏃 Sprint Actif : Sprint 2 — Modèles Personnalisables
+## 🏃 Sprint Actif : Sprint 5 — Analyse de Sentiment
 
-> **Objectif :** Permettre à l'utilisateur de choisir entre plusieurs styles de rendu pour son CV.
+> **Objectif :** Intégrer une dimension analytique visuelle sur le ton et la qualité du contenu.
 
 | ID | User Story | Priorité | Statut |
 |---|---|---|---|
-| US-00 | Page d'Accueil et Structure de Base | 🟢 Terminée | ✅ Validé |
-| US-01 | Modèles Personnalisables | 🔴 Haute | 📐 En cours |
+| US-06 | Analyse de Sentiment & Feedback | 🟡 Moyenne | 📐 En cours |
 
 ---
 
@@ -21,5 +20,4 @@
 - [ ] **IDEE** : Génération de questions d'entrevue basées sur le CV
 - [ ] **IDEE** : Résumé professionnel généré par IA
 - [ ] **IDEE** : Analyse de compatibilité avec une offre d'emploi
-- [ ] **Sprint Y** : Analyse de Sentiment (Évaluation du ton de l'IA/Document)
 - [ ] **Sprint Z** : La Touche Finale (Bannière, couleurs, ergonomie, polissage UI)

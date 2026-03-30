@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 5] — 2026-03-30 (Analyse & Perception)
+
+### Ajouté
+- **Analyse de Sentiment (US-06)** : Le conseiller IA évalue désormais le ton et l'impact professionnel des interactions.
+- **Feedback Visuel Dynamique** : Intégration de jauges de score et de labels émotionnels (`score`, `label`, `emoji`) dans l'interface de chat.
+- **Moteur d'empathie** : Nouvelle fonction `analyze_sentiment` dans `llm_service.py` utilisant des prompts Zero-shot pour une analyse instantanée.
+
+### Modifié
+- Harmonisation de l'interface de chat pour inclure les métadonnées de sentiment sous les réponses de l'assistant.
+
 ## [Sprint 4] — 2026-03-26 (L'IA prend la Parole)
 
 ### Ajouté
