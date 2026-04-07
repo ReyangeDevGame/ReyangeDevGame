@@ -1,78 +1,11 @@
-# cv_preview.py — Composant d'aperçu du CV
-# Rendu HTML/CSS sur-mesure mimant un design A4 premium (sans photo)
+import sys
 
-import streamlit as st
-import streamlit.components.v1 as components
+with open('src/components/cv_preview.py', 'r', encoding='utf-8') as f:
+    lines = f.readlines()
 
-def render_preview():
-    """
-    Affiche un aperçu en temps réel du CV dans un design HTML/CSS moderne.
-    """
-    cv_data = st.session_state.get("cv_data", {})
-    personal = cv_data.get("personal_info", {})
-    experiences = cv_data.get("experiences", [])
-    education = cv_data.get("education", [])
-    skills = cv_data.get("skills", [])
+new_content = "".join(lines[:74])
 
-    has_data = (
-        personal.get("name", "").strip()
-        or len(experiences) > 0
-        or len(education) > 0
-        or len(skills) > 0
-    )
-
-    if not has_data:
-        st.markdown(
-            """
-            <div style="text-align: center; padding: 3rem 1rem; color: #888; border: 2px dashed #ddd; border-radius: 12px; margin-top: 1rem;">
-                <h3>📝 Aperçu du CV</h3>
-                <p>Remplissez le formulaire pour voir l'aperçu apparaître ici.</p>
-            </div>
-            """, unsafe_allow_html=True
-        )
-        return
-
-    # ── Préparation des données ──
-    name = personal.get("name", "NAME SURNAME").strip()
-    job_title = experiences[0]["title"] if experiences and experiences[0].get("title") else "PROFESSIONAL"
-    
-    xp_html = ""
-    for exp in experiences:
-        start = exp.get("start", "")
-        end = exp.get("end", "")
-        date_str = f"{start}<br>{end}" if start and end else (start or end)
-        
-        xp_html += f"""
-        <div class="cv-exp-grid">
-            <div class="cv-date">{date_str}</div>
-            <div class="cv-content">
-                <div class="cv-content-title">{exp.get("title", "")} - {exp.get("company", "")}</div>
-                <div class="cv-content-desc">{exp.get("description", "").replace(chr(10), '<br>')}</div>
-            </div>
-        </div>
-        """
-        
-    edu_html = ""
-    for edu in education:
-        edu_html += f"""
-        <div class="cv-exp-grid">
-            <div class="cv-date">{edu.get("year", "")}</div>
-            <div class="cv-content">
-                <div class="cv-content-title">{edu.get("degree", "")}</div>
-                <div class="cv-content-desc">{edu.get("school", "")}</div>
-            </div>
-        </div>
-        """
-        
-    skills_html = ''.join([f'<span class="cv-skill-item">- {s}</span>' for s in skills]) if skills else '-'
-
-    contact_html = ""
-    mapping_contact = [("Address", "address"), ("Email", "email"), ("Mobile", "phone"), ("LinkedIn", "linkedin")]
-    for label, key in mapping_contact:
-        if personal.get(key):
-            contact_html += f'<div class="cv-contact-item"><div class="cv-contact-label">{label}</div><div class="cv-contact-value">{personal[key]}</div></div>'
-
-
+new_content += """
     template_id = st.session_state.get('selected_template', 'Template 1')
 
     # ========== TEMPLATE 1 : MODERNE (JAUNE & NOIR) ==========
@@ -310,8 +243,8 @@ def render_preview():
         </div>
         '''
 
-    # Nettoyage de l'indentation pour éviter que Streamlit ne l'interprète comme du code Markdown (4 espaces = bloc de code)
-    html_content = "\n".join([line.strip() for line in html_content.split("\n")])
-    
-    # Rendu final via st.markdown pour permettre l'extension verticale naturelle
-    st.markdown(html_content, unsafe_allow_html=True)
+    components.html(html_content, height=880, scrolling=True)
+"""
+
+with open('src/components/cv_preview.py', 'w', encoding='utf-8') as f:
+    f.write(new_content)

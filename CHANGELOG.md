@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 6] — 2026-04-07 (La Touche Finale)
+
+### Ajouté
+- **Design System Premium** : Refonte visuelle globale orientée Dark Mode (fonds dégradés fluides, typographie `Outfit`, glassmorphism, glowing shadows).
+- **Injection CSS Centralisée** : Gestion fine de l'UX via `st.markdown` pour outrepasser les limites visuelles natives de Streamlit, avec des micro-animations au survol (`hover` effects) offrant une navigabilité très fluide et moderne.
+- **Cohérence UI** : L'ensemble des composants (barre latérale, zone de drop des PDFs, chat IA et jauges de sentiment) est harmonisé graphiquement.
+
 ## [Sprint 5] — 2026-03-30 (Analyse & Perception)
 
 ### Ajouté

@@ -93,3 +93,38 @@
 ---
 
 *Sprint 5 clôturé le 30 Mars 2026. L'application est désormais capable d'empathie analytique !*
+
+## Phase actuelle : 🚀 Sprint 6 — La Touche Finale (UI/UX)
+
+---
+
+### ✅ Phase 22 : Planification US-07 (Touche Finale)
+- [x] Rôle **[BA]** : Définition de la vision de produit (UI/UX)
+- [x] Rôle **[BA]** : Rédaction de l'US-07 dans `docs/user_stories.md`
+- [x] Rôle **[BA]** : Déplacement dans `backlog.md`
+- [x] Rôle **[ARCHITECT]** : Rédaction de la spec technique `docs/specs/US07_spec.md`
+
+### ✅ Phase 23 : Développement UI/UX
+- [x] Rôle **[CODER]** : Injection du CSS personnalisé et refonte de l'interface.
+    - [x] Google Font `Outfit` intégrée sur toutes les pages
+    - [x] Fond dégradé global dark-mode (gradient `#0f0c29 → #1a1a2e → #16213e`)
+    - [x] Hero Section avec animation `fadeInDown` et gradient titre tri-couleur
+    - [x] Boutons premium avec hover `translateY` + glow shadow
+    - [x] Feature cards en glassmorphism (`backdrop-filter: blur`)
+    - [x] Inputs/TextAreas avec border-radius et glow indigo au focus
+    - [x] Progress bars sentiment en gradient indigo-violet
+    - [x] Metrics sentiment avec fond translucide et bordure
+    - [x] Scrollbar personnalisée indigo
+    - [x] Footer nettoyé (CSS dédupliqué, label Sprint 6)
+    - [x] Page `01_creer_cv.py` alignée sur le même design system
+- [x] Rôle **[QA]** : Validation cross-browser et tests d'ergonomie.
+
+### ✅ Phase 24 : Clôture & Synthèse (Sprint 6)
+- [x] Rôle **[BA/QA]** : Remplissage de la rétrospective (`docs/retrospectives/SPRINT_06.md`)
+- [x] Rôle **[DEVOPS]** : Mise à jour du CHANGELOG.md et archivage global
+- [x] Rôle **[BA]** : Rédaction de la synthèse globale (`docs/archive/SPRINT_06_summary.md`)
+- [x] Rôle **[PO]** : Validation finale du sprint
+
+---
+
+*Sprint 6 clôturé et archivé le 07 Avril 2026. L'application dispose désormais de sa Touche Finale Premium (Prête pour la démo) !*

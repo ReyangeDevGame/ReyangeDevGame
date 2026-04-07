@@ -274,3 +274,39 @@
 ### Notes techniques
 - **Modèle :** Utilisation d'un prompt "Few-shot" pour classer les sentiments.
 - **Visualisation :** `st.progress` ou composants HTML personnalisés.
+
+---
+
+## US-07 : La Touche Finale (Polissage UI/UX) 🟡
+
+> **Sprint :** Sprint 6 — La Touche Finale
+
+### User Story
+
+**En tant qu'** utilisateur,
+**je veux** interagir avec une application au design premium, coloré et dynamique,
+**afin de** ressentir la qualité et le sérieux du Générateur de CV IA et d'avoir une expérience fluide ("WOW effect").
+
+### Critères d'Acceptation
+
+1.  **Esthétique globale (Bannière & Thème)**
+    - [x] L'application intègre une bannière attrayante (Hero Image/Header) ou des éléments visuels forts en en-tête.
+    - [x] La palette de couleurs abandonne les gris "génériques" au profit d'une harmonie moderne (gradients, contrastes forts).
+
+2.  **Micro-animations & CSS (Vanilla CSS)**
+    - [x] Ajout d'animations subtiles au survol (hover) sur les éléments cliquables (boutons, cartes).
+    - [x] Les composants de formulaires et de résultat respirent (marges respectées, "glassmorphism" ou ombres légères si pertinent).
+
+3.  **Typographie**
+    - [x] L'application abandonne les polices par système par défaut pour une typographie moderne importée (ex: Google Fonts - `Outfit`).
+
+### Scénarios de test
+
+| # | Scénario | Résultat attendu |
+|---|---|---|
+| 1 | Lancement de l'application | L'utilisateur voit immédiatement un bandeau avec un design "Premium" inspirant confiance |
+| 2 | Navigation et survol des boutons | Les boutons réagissent visuellement (animations, ombres) au survol de la souris |
+
+### Notes techniques
+- **UI/Styles :** Injection de règles CSS personnalisées directement via `st.markdown("...", unsafe_allow_html=True)` (Vanilla CSS).
+- **Rôle BA :** Se limiter au design pur sans ajouter de nouvelles fonctionnalités data / IA complexes.

@@ -5,6 +5,22 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
     """
     Analyse le texte brut d'un CV et extrait une structure de base par heuristique/regex.
     """
+    # 0. Nettoyage global du texte (Suppression des ligatures d'icônes Material/Canva)
+    icon_ligatures = [
+        "keyboard_double_arrow_right", "keyboard_arrow_right", "arrow_right",
+        "chevron_right", "arrow_forward", "arrow_right_alt", "done", "check", 
+        "check_circle", "email", "phone", "location_on", "work", "school",
+        "_arrow_right_", "_chevron_right_", "info", "file_change", "person", 
+        "contact_mail", "credit_card", "description", "star", "language"
+    ]
+    for ligature in icon_ligatures:
+        text = re.sub(rf'[_]*\b{ligature}\b[_]*', '', text, flags=re.IGNORECASE)
+        text = text.replace(f"_{ligature}_", "").replace(ligature, "")
+    
+    # Nettoyage des éventuels résidus
+    text = re.sub(r'[_]+', ' ', text)
+    text = text.replace("  ", " ").strip()
+
     parsed_data: Dict[str, Any] = {
         "personal_info": {
             "name": "", "email": "", "phone": "",
@@ -33,28 +49,35 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
         parsed_data["personal_info"]["linkedin"] = linkedin_match.group(0)
         
     # Extraction de l'adresse
-    # 1. Code postal canadien (ex: G1R 2E8)
+    # Pour éviter d'englober email et téléphone, on les retire temporairement d'une copie du texte
+    address_search_text = text
+    if parsed_data["personal_info"]["email"]:
+        address_search_text = address_search_text.replace(parsed_data["personal_info"]["email"], " [EMAIL_REMOVED] ")
+    if parsed_data["personal_info"]["phone"]:
+        address_search_text = address_search_text.replace(parsed_data["personal_info"]["phone"], " [PHONE_REMOVED] ")
+
+    # 1. Format US/International avec Code postal 5 chiffres
     address_match = re.search(
-        r"[\w\s\-\.,']+,?\s*[A-Z]{2}\s*\d{5}(?:[-\s]\d{4})?",  # Format US
-        text
+        r"[\w\s\-\.,']+,?\s*[A-Z]{2}\s*\d{5}(?:[-\s]\d{4})?", 
+        address_search_text
     )
     if not address_match:
-        # Code postal canadien (ex: H3B 1A1)
+        # 2. Code postal canadien (ex: H3B 1A1)
         address_match = re.search(
             r"[\w\s\-\.,']+,?\s*[A-Z]{2}\s*[A-Z]\d[A-Z]\s*\d[A-Z]\d",
-            text
+            address_search_text
         )
     if not address_match:
-        # Ville, Province/Pays (ex: Montréal, Québec ou Paris, France)
+        # 3. Ville, Province/Pays (ex: Montréal, Québec ou Paris, France)
         address_match = re.search(
             r"(?:Adresse\s*:?\s*)?([A-ZÀ-Ö][\w\s\-']+,\s*[A-ZÀ-Ö][\w\s\-']{2,}(?:,\s*[A-ZÀ-Ö][\w\-']+)?)",
-            text
+            address_search_text
         )
     if not address_match:
-        # Ligne commençant par "Adresse" ou "Address"
+        # 4. Ligne commençant par "Adresse" ou "Address"
         address_line = re.search(
             r"(?:Adresse|Address)\s*[:\-]?\s*(.+)",
-            text, re.IGNORECASE
+            address_search_text, re.IGNORECASE
         )
         if address_line:
             parsed_data["personal_info"]["address"] = address_line.group(1).strip()
@@ -190,18 +213,49 @@ def parse_cv_text(text: str) -> Dict[str, Any]:
     # --- Parsing Compétences ---
     skill_lines = section_lines["skills"]
     noise_words = {"de", "la", "le", "les", "et", "ou", "un", "une", "des", "du", "en", "à", "au", "par", "pour"}
+    
+    # Noms ou emails potentiels déjà extraits pour ne pas les remettre en compétences
+    name_extracted = parsed_data["personal_info"]["name"].lower().replace(" ", "")
 
     for line in skill_lines:
-        parts = re.split(r'[,|\u2022/;\u00b7\u2013\u2014\t]+', line)
+        # Puces étendues : ajout de \u25cf (●), \u25a0 (■), etc.
+        parts = re.split(r'[,|\u2022/;\u00b7\u2013\u2014\t\u25cf\u25a0\u25aa]+', line)
         for part in parts:
-            skill = re.sub(r'^[\s\-\*\>\u2022\u25cf\u25aa]+', '', part).strip()
-            if skill and 1 < len(skill) < 60 and skill.lower() not in noise_words:
-                parsed_data["skills"].append(skill)
+            # Nettoyage des puces restantes au début ET à la fin
+            skill = re.sub(r'^[\s\-\*\>\u2022\u25cf\u25aa\u2013]+', '', part)
+            skill = re.sub(r'[\s\-\*\>\u2022\u25cf\u25aa\u2013]+$', '', skill).strip()
+            
+            if not skill or len(skill) < 2 or skill.lower() in noise_words:
+                continue
+                
+            # Filtre : Trop long (plus de 40 caractères)
+            if len(skill) > 40:
+                continue
+                
+            # Filtre : C'est une phrase (plus de 4 mots)
+            if len(skill.split()) > 4:
+                continue
+                
+            # Filtre : Ressemble à un email
+            if "@" in skill or re.search(r"[\w\.-]+@[\w\.-]+\.\w+", skill):
+                continue
+                
+            # Filtre : Ressemble à un téléphone
+            if re.search(r"\d{4,}", skill) or re.search(r"(?:\+?\d{1,3}[\s-]?)?(?:\d{2,3}[\s-]?){3,}", skill):
+                continue
+                
+            # Filtre : Ressemble au nom de l'utilisateur (ex: ReyanneN'Guessan collé)
+            skill_clean = skill.lower().replace(" ", "")
+            if name_extracted and (name_extracted in skill_clean or skill_clean in name_extracted):
+                continue
 
+            parsed_data["skills"].append(skill)
+
+    # Si rien n'est trouvé après filtrage
     if not parsed_data["skills"] and skill_lines:
         for line in skill_lines:
             skill = line.strip()
-            if skill and len(skill) < 60 and skill.lower() not in noise_words:
+            if skill and len(skill.split()) <= 4 and "@" not in skill and len(skill) < 40:
                 parsed_data["skills"].append(skill)
 
     if parsed_data["skills"]:
