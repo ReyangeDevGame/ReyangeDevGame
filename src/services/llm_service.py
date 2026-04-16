@@ -59,10 +59,10 @@ def get_best_model(api_key: str) -> str:
     stop=stop_after_attempt(5),
     reraise=True
 )
-def call_llm_api(prompt: str):
+def call_llm_api(prompt: str, audio_data: bytes = None, mime_type: str = "audio/wav"):
     """
-    Appelle l'API Gemini avec une logique de Retry (Exponential Backoff).
-    Gère les erreurs de quota (429) et les micro-coupures réseau.
+    Appelle l'API Gemini avec support optionnel pour l'audio (multimodal).
+    Gère les erreurs de quota et les retries via Tenacity.
     """
     api_key = get_api_key()
     if not api_key:
@@ -73,8 +73,16 @@ def call_llm_api(prompt: str):
     model = genai.GenerativeModel(selected_model)
     
     try:
-        # Appel à l'IA
-        response = model.generate_content(prompt)
+        # Préparation du contenu (texte + optionnellement audio)
+        contents = [prompt]
+        if audio_data:
+            contents.append({
+                "mime_type": mime_type,
+                "data": audio_data
+            })
+
+        # Appel à l'IA avec le contenu multimodal
+        response = model.generate_content(contents)
         
         if not response or not hasattr(response, 'text') or not response.text:
             raise Exception(f"L'API IA ({selected_model}) a renvoyé une réponse vide ou invalide.")

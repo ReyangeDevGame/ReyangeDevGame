@@ -122,48 +122,58 @@ for message in st.session_state.messages:
             s = message["sentiment"]
             st.caption(f"{s['emoji']} {s.get('tone', s.get('label', ''))}")
 
+# Entrée vocale (Microphone)
+audio_query = st.audio_input("🎤 Posez votre question par la voix")
 prompt = st.chat_input("Ex: Comment décrire mon expérience de chef de projet ?")
 
-if prompt:
-    from services.llm_service import analyze_sentiment
-    user_sentiment = analyze_sentiment(prompt)
+# Détermine l'entrée à traiter (audio ou texte)
+voice_triggered = False
+if audio_query and "last_audio" not in st.session_state or (audio_query and st.session_state.get("last_audio") != audio_query.file_id):
+    st.session_state["last_audio"] = audio_query.file_id
+    voice_triggered = True
+
+if prompt or voice_triggered:
+    # Si c'est de la voix, on prépare un prompt spécial pour Gemini
+    current_audio = audio_query.read() if voice_triggered else None
+    display_prompt = prompt if prompt else "*(Message vocal reçu 🎙️)*"
     
-    st.session_state.messages.append({"role": "user", "content": prompt, "sentiment": user_sentiment})
+    from services.llm_service import analyze_sentiment
+    user_sentiment = {"score": 50, "label": "Neutre", "tone": "Inconnu", "emoji": "💬"}
+    if prompt:
+        user_sentiment = analyze_sentiment(prompt)
+    
+    st.session_state.messages.append({"role": "user", "content": display_prompt, "sentiment": user_sentiment})
     with st.chat_message("user"):
-        st.markdown(prompt)
-        st.caption(f"{user_sentiment['emoji']} {user_sentiment['label']}")
+        st.markdown(display_prompt)
+        if prompt:
+            st.caption(f"{user_sentiment['emoji']} {user_sentiment['label']}")
 
     with st.chat_message("assistant"):
         with st.spinner("Réflexion..."):
             try:
-                # Intégration du contexte du CV s'il existe
+                # Contextualisation
                 cv_context = ""
                 if "cv_data" in st.session_state and st.session_state["cv_data"]:
                     import json
                     cv_info = st.session_state["cv_data"]
                     raw_text = st.session_state.get("pdf_text", "")
-                    cv_context = f"\n\nCONTEXTE DU CV DE L'UTILISATEUR :\n{json.dumps(cv_info, indent=2, ensure_ascii=False)}"
-                    if raw_text:
-                        cv_context += f"\n\nTEXTE BRUT DU PDF :\n{raw_text}"
+                    cv_context = f"\n\nCONTEXTE DU CV :\n{json.dumps(cv_info, indent=2, ensure_ascii=False)}"
+                    if raw_text: cv_context += f"\n\nTEXTE BRUT PDF :\n{raw_text}"
 
-                full_prompt = f"""Tu es un coach carrière expert et bienveillant. 
-                Utilise le contexte du CV de l'utilisateur ci-dessous pour répondre de manière précise et personnalisée à sa question.
-                C'est très important : utilise son nom, ses expériences et ses compétences réelles si elles sont présentes.
-                Si le contexte est vide, réponde de façon générale.
-
+                system_instruction = f"""Tu es un coach carrière expert. 
+                Utilise le contexte suivant pour répondre précisément :
                 {cv_context}
                 
-                QUESTION DE L'UTILISATEUR :
-                {prompt}"""
+                IMPORTANT : Si tu reçois un message audio, commence ta réponse par transcrire la question de l'utilisateur entre parenthèses (...) si nécessaire pour la clarté.
+                """
                 
-                response = call_llm_api(full_prompt)
+                actual_prompt = prompt if prompt else "Réponds à ma question vocale."
+                full_prompt = f"{system_instruction}\n\nQUESTION : {actual_prompt}"
+                response = call_llm_api(full_prompt, audio_data=current_audio)
+
                 
                 sentiment = analyze_sentiment(response)
                 st.markdown(f"*{sentiment['emoji']} {sentiment['tone']}*")
-                
-                audio_bytes = text_to_audio_bytes(response)
-                if audio_bytes:
-                    st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                 
                 # Streaming
                 import time
@@ -172,6 +182,11 @@ if prompt:
                         yield word + " "
                         time.sleep(0.04)
                 st.write_stream(stream_data())
+                
+                # Audio joué ARPÈS le stream pour éviter les coupures d'autoplay
+                audio_bytes = text_to_audio_bytes(response)
+                if audio_bytes:
+                    st.audio(audio_bytes, format='audio/mp3', autoplay=True)
                 
                 st.session_state.messages.append({"role": "assistant", "content": response, "sentiment": sentiment})
             except Exception as e:
